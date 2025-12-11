@@ -1,0 +1,7 @@
+{
+  "name": "Namaz Takip & Asistan",
+  "description": "Android uyumlu, kişisel namaz takip uygulaması. Vakitleri takip edin, kaza namazlarını kaydedin ve yapay zeka asistanına dini sorular sorun.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
