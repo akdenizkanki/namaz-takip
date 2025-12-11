@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Loader2, Moon, Volume2, Zap, ZapOff } from 'lucide-react';
+import { MapPin, Loader2, Moon, Volume2, Zap, ZapOff, AlertTriangle, X } from 'lucide-react';
 import { AppView, DailyRecord, PrayerTimes, LocationData, AlarmSettings } from './types';
 import { getPrayerTimes, getHijriDate } from './services/prayerService';
 import { prayerGuides, PrayerGuide } from './data/prayerGuides';
@@ -30,6 +30,9 @@ const App: React.FC = () => {
 
   // Guide Modal State
   const [activeGuide, setActiveGuide] = useState<PrayerGuide | null>(null);
+
+  // Alarm Warning Modal
+  const [showAlarmWarning, setShowAlarmWarning] = useState(false);
 
   // Initialize date string for today
   const todayStr = new Date().toISOString().split('T')[0];
@@ -258,7 +261,14 @@ const App: React.FC = () => {
       }
 
       setAlarms(prev => {
-          const newAlarms = { ...prev, [prayerKey]: !prev[prayerKey] };
+          const newState = !prev[prayerKey];
+          // If turning ON an alarm, and warning hasn't been shown, show it
+          if (newState && !localStorage.getItem('alarmWarningShown')) {
+            setShowAlarmWarning(true);
+            localStorage.setItem('alarmWarningShown', 'true');
+          }
+
+          const newAlarms = { ...prev, [prayerKey]: newState };
           localStorage.setItem('alarmSettings', JSON.stringify(newAlarms));
           return newAlarms;
       });
@@ -321,7 +331,7 @@ const App: React.FC = () => {
                 onClick={toggleWakeLock}
                 className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs backdrop-blur-sm transition-colors border ${
                   isWakeLockActive 
-                    ? 'bg-amber-400 border-amber-400 text-amber-900 font-bold' 
+                    ? 'bg-amber-400 border-amber-400 text-amber-900 font-bold animate-pulse' 
                     : 'bg-emerald-700/50 border-transparent text-emerald-100'
                 }`}
               >
@@ -471,6 +481,30 @@ const App: React.FC = () => {
           guide={activeGuide} 
         />
         
+        {/* Alarm Warning Modal */}
+        {showAlarmWarning && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center px-6 animate-fade-in">
+             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAlarmWarning(false)}></div>
+             <div className="bg-white rounded-2xl shadow-xl p-5 relative z-10 max-w-xs text-center">
+                <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                   <AlertTriangle size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">Önemli Hatırlatma</h3>
+                <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                   Bu bir web uygulaması olduğu için, telefonunuz kilitlendiğinde bildirimler susabilir.
+                   <br/><br/>
+                   Alarmın kesin çalması için lütfen <span className="font-bold text-emerald-600">"Uyanık Mod"</span>u (Şimşek İkonu) açın ve uygulamayı açık bırakın.
+                </p>
+                <button 
+                  onClick={() => setShowAlarmWarning(false)}
+                  className="w-full bg-emerald-600 text-white font-semibold py-2.5 rounded-xl hover:bg-emerald-700 transition-colors"
+                >
+                   Anladım, Teşekkürler
+                </button>
+             </div>
+          </div>
+        )}
+
         <BottomNav currentView={view} onChangeView={setView} />
       </main>
     </div>
