@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    base: './', // Ensures relative paths work on deployment
+    base: '/', // Changed from './' to '/' for better PWA compatibility
     server: {
       host: true
     },
