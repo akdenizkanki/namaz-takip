@@ -15,7 +15,7 @@ interface PrayerCardProps {
 }
 
 export const PrayerCard: React.FC<PrayerCardProps> = ({ 
-  name, trName, time, completed, alarmEnabled, onToggle, onToggleAlarm, onShowInfo, isNext, warningText 
+  trName, time, completed, alarmEnabled, onToggle, onToggleAlarm, onShowInfo, isNext, warningText 
 }) => {
   return (
     <div 

@@ -1,5 +1,9 @@
 import { GoogleGenAI } from "@google/genai";
 
+// Fix for TS2580: 'process' not found.
+// This is replaced by Vite at build time via define, but TS needs to know it exists.
+declare const process: { env: { API_KEY: string } };
+
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const askReligiousQuestion = async (question: string): Promise<string> => {

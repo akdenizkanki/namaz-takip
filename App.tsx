@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Loader2, Moon, Volume2, VolumeX, Sun, Zap, ZapOff } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MapPin, Loader2, Moon, Volume2, Zap, ZapOff } from 'lucide-react';
 import { AppView, DailyRecord, PrayerTimes, LocationData, AlarmSettings } from './types';
 import { getPrayerTimes, getHijriDate } from './services/prayerService';
 import { prayerGuides, PrayerGuide } from './data/prayerGuides';

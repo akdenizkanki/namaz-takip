@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { DailyRecord } from '../types';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { CheckCircle2, XCircle, Clock, CalendarDays } from 'lucide-react';
 
 interface StatsViewProps {

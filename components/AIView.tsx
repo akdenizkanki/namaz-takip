@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, User, Sparkles } from 'lucide-react';
+import { Send, Sparkles } from 'lucide-react';
 import { ChatMessage } from '../types';
 import { askReligiousQuestion } from '../services/geminiService';
 

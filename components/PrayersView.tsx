@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Book, ChevronDown, ChevronUp } from 'lucide-react';
-import { religiousTexts, ReligiousText } from '../data/prayersData';
+import { religiousTexts } from '../data/prayersData';
 
 export const PrayersView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'SURE' | 'DUA'>('SURE');
