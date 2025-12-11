@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { DailyRecord, KazaCounts } from '../types';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { CheckCircle2, XCircle, Clock, CalendarDays, Calculator, Minus, Plus, AlertCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, CalendarDays, Calculator, Minus, Plus, AlertCircle, Save } from 'lucide-react';
 
 interface StatsViewProps {
   history: Record<string, DailyRecord>;
@@ -119,6 +119,37 @@ export const StatsView: React.FC<StatsViewProps> = ({ history, nextPrayer, kazaC
     onUpdateKaza(newCounts);
   };
 
+  const handleTransferToKaza = () => {
+    if (!onUpdateKaza || !kazaCounts) {
+        alert("Lütfen önce Kaza Takibi sekmesinden hesaplama yapınız.");
+        setActiveTab('kaza');
+        return;
+    }
+
+    const todayRecord = history[todayStr]?.prayers || { fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false };
+    const missedKeys: (keyof KazaCounts)[] = [];
+
+    if (!todayRecord.fajr) missedKeys.push('fajr');
+    if (!todayRecord.dhuhr) missedKeys.push('dhuhr');
+    if (!todayRecord.asr) missedKeys.push('asr');
+    if (!todayRecord.maghrib) missedKeys.push('maghrib');
+    if (!todayRecord.isha) missedKeys.push('isha');
+
+    if (missedKeys.length === 0) {
+        alert("Bugün henüz kılınmamış bir vaktiniz görünmüyor veya hepsi tamamlandı.");
+        return;
+    }
+
+    if (window.confirm(`Bugün kılmadığınız ${missedKeys.length} vakit namaz (Vitir hariç) kaza listenize eklensin mi?`)) {
+       const newCounts = { ...kazaCounts };
+       missedKeys.forEach(key => {
+         newCounts[key] = (newCounts[key] || 0) + 1;
+       });
+       onUpdateKaza(newCounts);
+       alert("Eksikler başarıyla kaza listenize eklendi.");
+    }
+  };
+
   const hasActiveKaza = kazaCounts && Object.values(kazaCounts).some((v) => (v as number) > 0);
 
   return (
@@ -155,6 +186,18 @@ export const StatsView: React.FC<StatsViewProps> = ({ history, nextPrayer, kazaC
               </p>
             </div>
           </div>
+
+           {/* End Day Button */}
+           <button 
+             onClick={handleTransferToKaza}
+             className="w-full py-4 bg-slate-800 text-white rounded-2xl flex items-center justify-center gap-2 shadow-lg hover:bg-slate-700 active:scale-95 transition-all"
+           >
+             <Save size={20} />
+             <div className="flex flex-col items-start">
+               <span className="font-bold text-sm">Günü Değerlendir</span>
+               <span className="text-[10px] text-slate-300 font-normal">Kılınmayanları kazaya ekle</span>
+             </div>
+           </button>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 h-64">
             <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
