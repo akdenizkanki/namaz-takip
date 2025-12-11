@@ -36,6 +36,15 @@ export interface LocationData {
   city?: string;
 }
 
+export interface KazaCounts {
+  fajr: number;
+  dhuhr: number;
+  asr: number;
+  maghrib: number;
+  isha: number;
+  vitr: number;
+}
+
 export enum AppView {
   HOME = 'HOME',
   STATS = 'STATS',

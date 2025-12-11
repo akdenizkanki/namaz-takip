@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Loader2, Moon, Volume2, Zap, ZapOff, AlertTriangle, X } from 'lucide-react';
-import { AppView, DailyRecord, PrayerTimes, LocationData, AlarmSettings } from './types';
+import { AppView, DailyRecord, PrayerTimes, LocationData, AlarmSettings, KazaCounts } from './types';
 import { getPrayerTimes, getHijriDate } from './services/prayerService';
 import { prayerGuides, PrayerGuide } from './data/prayerGuides';
 import { PrayerCard } from './components/PrayerCard';
@@ -19,6 +19,9 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<Record<string, DailyRecord>>({});
   const [alarms, setAlarms] = useState<AlarmSettings>({
     fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false
+  });
+  const [kazaCounts, setKazaCounts] = useState<KazaCounts>({
+    fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0, vitr: 0
   });
   
   // Notification permission state
@@ -75,9 +78,6 @@ const App: React.FC = () => {
       }
       // Always play sound
       playAlarmSound();
-      
-      // If the page is visible, we can also use alert, but notification is better.
-      // We rely on the sound mostly if screen is on.
   };
 
   // Wake Lock Functionality
@@ -137,6 +137,9 @@ const App: React.FC = () => {
 
     const savedAlarms = localStorage.getItem('alarmSettings');
     if (savedAlarms) setAlarms(JSON.parse(savedAlarms));
+
+    const savedKaza = localStorage.getItem('kazaCounts');
+    if (savedKaza) setKazaCounts(JSON.parse(savedKaza));
 
     // Check Notification Permission
     if ('Notification' in window) {
@@ -272,6 +275,11 @@ const App: React.FC = () => {
           localStorage.setItem('alarmSettings', JSON.stringify(newAlarms));
           return newAlarms;
       });
+  };
+
+  const updateKazaCounts = (newCounts: KazaCounts) => {
+    setKazaCounts(newCounts);
+    localStorage.setItem('kazaCounts', JSON.stringify(newCounts));
   };
 
   const handleShowGuide = (e: React.MouseEvent, prayerKey: string) => {
@@ -469,7 +477,7 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-emerald-100 selection:text-emerald-900">
       <main className="max-w-md mx-auto min-h-screen bg-white shadow-2xl overflow-hidden relative">
         {view === AppView.HOME && renderHome()}
-        {view === AppView.STATS && <StatsView history={history} nextPrayer={nextPrayer} />}
+        {view === AppView.STATS && <StatsView history={history} nextPrayer={nextPrayer} kazaCounts={kazaCounts} onUpdateKaza={updateKazaCounts} />}
         {view === AppView.PRAYERS && <PrayersView />}
         {view === AppView.AI_CHAT && <AIView />}
         {view === AppView.SETTINGS && renderSettings()}
