@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { DailyRecord, KazaCounts } from '../types';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { CheckCircle2, XCircle, Clock, CalendarDays, Calculator, Minus, Plus, AlertCircle, Save } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, CalendarDays, Calculator, Plus, AlertCircle, Save } from 'lucide-react';
 
 interface StatsViewProps {
   history: Record<string, DailyRecord>;
