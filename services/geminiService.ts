@@ -16,6 +16,6 @@ export const askReligiousQuestion = async (question: string): Promise<string> =>
     return response.text || "Üzgünüm, şu an cevap veremiyorum.";
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "Bağlantı hatası oluştu. Lütfen tekrar deneyin.";
+    return "Bağlantı hatası oluştu veya kotanız doldu. Lütfen daha sonra tekrar deneyin.";
   }
 };
